@@ -1,0 +1,33 @@
+Laborator 5, GTBDD
+(2 saptamani, echipe de cate 2)
+
+Se considera un tabel care contine o coloana cu informatie de identificare, si alte coloane cu informatii diverse (de exemplu: Studenti (nrmatricol, nume, grupa), Note (RID, materia, student, nota), ...).
+
+Se cere implementarea comportamentului algoritmilor de control al concurentei folosind blocari (sub nivelele de izolare Read Committed sau Repeatable Read) si OCC.
+
+Cerinte:
+
+CC1. Interfata se creeaza in .Net, iar obiectele necesare si algoritmul de control al concurentei se implementeaza folosind obiecte ale SQL-Server (proceduri stocate si / sau trigger-e, plus functii, view-uri).
+
+CC2. Interfata:
+-	permite delimitarea operatiilor unei tranzactii in timp – se alege inceputul si sfarsitul tranzactiei (cu comitere sau anulare) (de exemplu: cate un buton pentru inceput, comitere, anulare tranzactie); la un moment dat, in instanta curenta a aplicatiei, este activa o singura tranzactie; pentru a testa controlul concurentei, aplicatia se va lansa de cel putin doua ori
+-	permite afisarea datelor din tabelul de lucru
+-	permite selectare multipla de inregistrari
+-	pentru inregistrarile selectate, „tranzactia” poate sa efectueze operatii de tip SELECT, UPDATE, DELETE; de asemenea, se permite adaugarea de inregistrari (adaugarea de cate o inregistrare la un moment dat) prin completarea unor campuri de catre utilizator
+
+CC2. Server-side:
+-	toate datele necesare pentru gestiunea concurentei sunt stocate in tabele (tranzactii, blocari, seturi de citire sau scriere, fisierul jurnal... tot)
+-	se implementeaza operatia UNDO pentru CC cu blocari si OCC
+-	nu se cere obligatoriu implementare de detectare de DEADLOCK pentru CC cu blocari (ramane optionala)
+-	controlul concurentei se implementeaza cu ajutorul procedurilor stocate si / sau trigger-elor; aceste obiecte anunta tranzactiile (interfata) de orice eveniment deosebit care apare (punere in asteptare sau anulare)
+-	se implementeaza si se folosesc cel putin doua functii definite de utilizator si cel putin un view definit de utilizator
+
+CC3. Se creeaza si o forma de monitorizare in timp real a tranzactiilor (cu refresh la aprox. 1 sec.), cu vizualizarea:
+-	(CC cu blocare) timpilor de executie – inceput, sfarsit – a tranzactiilor, blocarilor
+-	(OCC) fazelor de executie a tranzactiilor (unde incepe si unde se termina fazele R, V, W), seturilor de citire / scriere
+
+Cateva observatii:
+-	fiecare tranzactie are un ID unic
+-	blocarile utilizate vor fi doar cele de tip S si X
+-	CC cu blocari: jurnalul va contine imaginile anterioare (eventual si imaginile ulterioare) ale resurselor modificate (evident, se va cunoaste ID-ul tranzactiei care a efectuat modificarea, precum si id-ul inregistrarii care a fost modificata); pentru a efectua cat mai usor anularea operatiilor unei tranzactii, se poate retine in jurnal intreaga inregistrare inainte de modificare, si intreaga inregistrare dupa modificare (pentru a gestiona mai usor si operatiile INSERT si DELETE)
+
